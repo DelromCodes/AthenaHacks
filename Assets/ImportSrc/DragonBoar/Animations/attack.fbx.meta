@@ -102,9 +102,11 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleRotations: 1
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -156,21 +158,21 @@ ModelImporter:
       - path: Root/joint5/joint6/joint7/joint8
         weight: 1
       - path: Root/L_UpperLeg
-        weight: 1
+        weight: 0
       - path: Root/L_UpperLeg/L_LowerLeg
-        weight: 1
+        weight: 0
       - path: Root/L_UpperLeg/L_LowerLeg/L_Feet
-        weight: 1
+        weight: 0
       - path: Root/L_UpperLeg/L_LowerLeg/L_Feet/L_Toes
-        weight: 1
+        weight: 0
       - path: Root/R_UpperReg
-        weight: 1
+        weight: 0
       - path: Root/R_UpperReg/R_RowerReg
-        weight: 1
+        weight: 0
       - path: Root/R_UpperReg/R_RowerReg/R_Feet
-        weight: 1
+        weight: 0
       - path: Root/R_UpperReg/R_RowerReg/R_Feet/R_Toes
-        weight: 1
+        weight: 0
       - path: Root/Spine1
         weight: 1
       - path: Root/Spine1/Chest
@@ -210,25 +212,25 @@ ModelImporter:
       - path: Root/Spine1/Chest/Head/UpperMouth1/UpperMouth2
         weight: 1
       - path: Root/Spine1/Chest/L_UpperArm
-        weight: 1
+        weight: 0
       - path: Root/Spine1/Chest/L_UpperArm/L_LowerArm
-        weight: 1
+        weight: 0
       - path: Root/Spine1/Chest/L_UpperArm/L_LowerArm/L_Hand
-        weight: 1
+        weight: 0
       - path: Root/Spine1/Chest/L_UpperArm/L_LowerArm/L_Hand/L_Fingers
-        weight: 1
+        weight: 0
       - path: Root/Spine1/Chest/R_UpperArm
-        weight: 1
+        weight: 0
       - path: Root/Spine1/Chest/R_UpperArm/R_RowerArm
-        weight: 1
+        weight: 0
       - path: Root/Spine1/Chest/R_UpperArm/R_RowerArm/R_Hand
-        weight: 1
+        weight: 0
       - path: Root/Spine1/Chest/R_UpperArm/R_RowerArm/R_Hand/R_Fingers
-        weight: 1
+        weight: 0
       - path: Root_CTRL
         weight: 1
-      maskType: 0
-      maskSource: {instanceID: 0}
+      maskType: 1
+      maskSource: {fileID: 31900000, guid: 9db9901a5cda94b91905ae2ff5a03e65, type: 2}
       additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
@@ -255,6 +257,7 @@ ModelImporter:
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
+    serializedVersion: 2
     human: []
     skeleton: []
     armTwist: 0.5
@@ -265,7 +268,10 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
   humanoidOversampling: 1

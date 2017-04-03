@@ -78,28 +78,28 @@ public class Player : MonoBehaviour {
 
 	//Movement related
 	protected void AnimateIdle() {
-		Animator.SetTrigger(idle);
 		moving = false;
+		Animator.SetTrigger(idle);
 	}
 
 	protected void AnimateWalk() {
-		Animator.SetTrigger(walk);
 		moving = true;
+		Animator.SetTrigger(walk);
 	}
 
 	protected void AnimateRun() {
-		Animator.SetTrigger(run);
 		moving = true;
+		Animator.SetTrigger(run);
 	}
 
 	//Damage related
 	protected void AnimateGetHit() {
-		Animator.SetTrigger(getHit);
 		moving = false;
+		Animator.SetTrigger(getHit);
 	}
 
 	protected void AnimateDie() {
-		Animator.SetTrigger(die);
 		moving = false;
+		Animator.SetTrigger(die);
 	}
 }

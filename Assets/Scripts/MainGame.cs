@@ -19,12 +19,23 @@ public class MainGame : MonoBehaviour {
 	}
 
 	protected void HandleInput() {
-		if(Input.GetKey(KeyCode.LeftArrow)) {
+		HandleMovement();
+		HandleAttack();
+	}
+
+	protected void HandleMovement() {
+		if (Input.GetKey(KeyCode.LeftArrow)) {
 			Player.Move(new Vector3 (Player.transform.position.x - MoveSensitivity, Player.transform.position.y, Player.transform.position.z));
 		} else if(Input.GetKey(KeyCode.RightArrow)) {
 			Player.Move(new Vector3 (Player.transform.position.x + MoveSensitivity, Player.transform.position.y, Player.transform.position.z));
 		} else if (ShouldStopMoving) {
 			Player.StopMove();
+		}
+	}
+
+	protected void HandleAttack() {
+		if (Input.GetKeyDown(KeyCode.Space)) {
+			Player.Attack();
 		}
 	}
 
