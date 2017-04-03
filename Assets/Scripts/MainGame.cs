@@ -7,17 +7,28 @@ public class MainGame : MonoBehaviour {
 
 	public Player Player;
 
-	protected float MoveSensitivity = 0.1f;
+	protected float moveIncrement = 0.1f;
 
+	//Initialization methods
 	public void Start() {
 		//initialize gameboard
 		//initialize HUD
 	}
 
+	protected void InitializeGameboard() {
+
+	}
+
+	protected void InitializeHUD() {
+
+	}
+
+	//Update methods
 	public void Update() {
 		HandleInput();
 	}
 
+	//Input Methods
 	protected void HandleInput() {
 		HandleMovement();
 		HandleAttack();
@@ -25,9 +36,9 @@ public class MainGame : MonoBehaviour {
 
 	protected void HandleMovement() {
 		if (Input.GetKey(KeyCode.LeftArrow)) {
-			Player.Move(new Vector3 (Player.transform.position.x - MoveSensitivity, Player.transform.position.y, Player.transform.position.z));
+			Player.Move(GetMoveLeftPosition);
 		} else if(Input.GetKey(KeyCode.RightArrow)) {
-			Player.Move(new Vector3 (Player.transform.position.x + MoveSensitivity, Player.transform.position.y, Player.transform.position.z));
+			Player.Move(GetMoveRightPosition);
 		} else if (ShouldStopMoving) {
 			Player.StopMove();
 		}
@@ -47,12 +58,33 @@ public class MainGame : MonoBehaviour {
 		}
 	}
 
-	protected void InitializeGameboard() {
-		
+	protected Vector3 GetMoveLeftPosition {
+		get {
+			//Update the WorldPosition to the left
+			Vector3 newWorldPos = Player.transform.position;
+			newWorldPos.x -= moveIncrement;
+
+			//Clamp the newWorldPos to the viewport's edge
+			Vector3 viewportPos = Camera.main.WorldToViewportPoint(newWorldPos);
+			viewportPos.x = Mathf.Max(viewportPos.x, 0.1f); //Viewport is from 0.0f to 1.0f
+			Vector3 clampedWorldPos = Camera.main.ViewportToWorldPoint(viewportPos);
+
+			return clampedWorldPos;
+		}
 	}
 
-	protected void InitializeHUD() {
-		
-	}
+	protected Vector3 GetMoveRightPosition {
+		get {
+			//Update the WorldPosition to the left
+			Vector3 newWorldPos = Player.transform.position;
+			newWorldPos.x += moveIncrement;
 
+			//Clamp the newWorldPos to the viewport's edge
+			Vector3 viewportPos = Camera.main.WorldToViewportPoint(newWorldPos);
+			viewportPos.x = Mathf.Min(viewportPos.x, 0.9f); //Viewport is from 0.0 to 1.0f
+			Vector3 clampedWorldPos = Camera.main.ViewportToWorldPoint(viewportPos);
+
+			return clampedWorldPos;
+		}
+	}
 }
