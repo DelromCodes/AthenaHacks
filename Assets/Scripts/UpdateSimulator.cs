@@ -4,29 +4,35 @@ using UnityEngine;
 
 public class UpdateSimulator {
 
+	protected bool DEBUG_PLAYER_INVICIBLE = false;
+
 	protected ResourceManager resourceManager;
 	protected Player player;
 	protected Enemy enemy;
+	protected ScoreView scoreView;
 
 	//Projectile related
 	protected List<Projectile> projectiles = new List<Projectile>();
 	protected List<Projectile> projectilesToRemove = new List<Projectile>();
-	protected string FIRE_PROJECTILE = "FireProjectile";
+
+	//Gems related
+	protected List<GameObject> gems = new List<GameObject>();
+	protected List<GameObject> gemstoRemove = new List<GameObject>();
 
 	//State related
 	protected bool playerAlive = false;
+	protected int score = 0;
 
-	//Dialog related
-	protected string DRAGON_DIALOG = "DragonDialog";
-
-	public void Init(Player player_, Enemy enemy_, ResourceManager resourceManager_) {
+	public void Init(Player player_, Enemy enemy_, ScoreView scoreView_, ResourceManager resourceManager_) {
 		player = player_;
 		enemy = enemy_;
+		scoreView = scoreView_;
 		resourceManager = resourceManager_;
 	}
 
 	public void StartGame() {
 		playerAlive = true;
+		score = 0;
 	}
 
 	//Update methods
@@ -36,33 +42,37 @@ public class UpdateSimulator {
 			ResolveMovement();
 			ResolveCollisions();
 			ResolveCleanUp();
+			scoreView.UpdateScore(score);
 		}
 	}
 
 	//Collision methods
 	protected void ResolveCollisions() {
-		ResolvePlayerCollisionWithEnemy();
-		ResolveProjectileCollisionWithEnemy();
+		if (!DEBUG_PLAYER_INVICIBLE) {
+			ResolvePlayerCollisionWithEnemy ();
+		}
+//		ResolveProjectileCollisionWithEnemy();
 	}
 
 	protected void ResolvePlayerCollisionWithEnemy() {
 		if (HasCollision(player.Collider, enemy.Collider)) {
 			//GameOver
-			resourceManager.LoadDialog(DRAGON_DIALOG);
-			Debug.Log("GameOver!");
+			resourceManager.LoadDialog(ResourceManager.DRAGON_DIALOG);
 			playerAlive = false;
 		}
 	}
 
-	protected void ResolveProjectileCollisionWithEnemy() {
-		foreach (Projectile projectile in projectiles) {
-			if (HasCollision(projectile.Collider, enemy.Collider)) {
-				//enemy was hit
-				Debug.Log("Enemy hit!");
-				projectilesToRemove.Add(projectile);
-			}
-		}
-	}
+//	protected void ResolveProjectileCollisionWithEnemy() {
+//		foreach (Projectile projectile in projectiles) {
+//			if (HasCollision(projectile.Collider, enemy.Collider)) {
+//				//Enemy was hit
+//				score += 10;
+//				projectilesToRemove.Add(projectile);
+//				enemy.OnHit();
+//				SpawnGems();
+//			}
+//		}
+//	}
 
 	protected bool HasCollision(Collider collider1, Collider collider2) {
 		return collider1.bounds.Intersects(collider2.bounds);
@@ -72,7 +82,7 @@ public class UpdateSimulator {
 	//Input Methods
 	protected void ResolvePlayerInput() {
 		ResolvePlayerMovement();
-		ResolvePlayerAttack();
+//		ResolvePlayerAttack();
 	}
 
 	protected void ResolvePlayerMovement() {
@@ -85,21 +95,14 @@ public class UpdateSimulator {
 		}
 	}
 
-	protected void ResolvePlayerAttack() {
-		if (Input.GetKeyDown(KeyCode.Space)) {
-			player.Attack();
-			SpawnProjectile();
-			Debug.Log("Attacking");
-
-		}
-	}
-
-	protected void SpawnProjectile() {
-		GameObject go = resourceManager.LoadPrefab(FIRE_PROJECTILE);
-		Projectile projectile = go.GetComponent<Projectile>();
-		projectile.Init(player.transform.position, Vector3.up);
-		projectiles.Add(projectile);
-	}
+//	protected void ResolvePlayerAttack() {
+//		if (Input.GetKeyDown(KeyCode.Space)) {
+//			player.Attack();
+//			SpawnProjectile();
+//			Debug.Log("Attacking");
+//
+//		}
+//	}
 
 	protected bool ShouldStopMoving {
 		get {
@@ -109,18 +112,47 @@ public class UpdateSimulator {
 		}
 	}
 
+	//Spawn methods
+	protected void SpawnProjectile() {
+		GameObject go = resourceManager.LoadPrefab(ResourceManager.FIRE_PROJECTILE);
+		Projectile projectile = go.GetComponent<Projectile>();
+		projectile.Init(new Vector3(player.transform.position.x, player.transform.position.y + 2f, player.transform.position.z), Vector3.up);
+		projectiles.Add(projectile);
+	}
+
+	protected void SpawnGems() {
+		SpawnGem(ResourceManager.SINGLE_CUT);
+		SpawnGem(ResourceManager.PEAR_CUT);
+		SpawnGem(ResourceManager.ROSE_CUT);
+		SpawnGem(ResourceManager.ROUND_CUT);
+	}
+
+	protected void SpawnGem(string gemPrefabName) {
+		GameObject go = resourceManager.LoadPrefab(gemPrefabName);
+		go.transform.position = new Vector3(enemy.transform.position.x, enemy.transform.position.y + 1f, enemy.transform.position.z);
+		go.GetComponent<Rigidbody>().AddForce(Random.Range (-3f, 3f), Random.Range (0f, 2f), 0f);
+		gems.Add(go);
+	}
+
 	//Movement methods
 	protected void ResolveMovement() {
 		player.OnMove();
 		enemy.OnMove();
 
-		Vector3 upperBoundPos = Camera.main.ViewportToWorldPoint(new Vector3(0f, 0.9f, 0f));
+		Vector3 upperBoundPos = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, 0f));
 		foreach (Projectile projectile in projectiles) {
 			projectile.OnMove();
 			if (projectile.transform.position.y > upperBoundPos.y) {
 				if (!projectilesToRemove.Contains(projectile)) {
 					projectilesToRemove.Add(projectile);
 				}
+			}
+		}
+
+		Vector3 lowerBoundPos = Camera.main.ViewportToWorldPoint(new Vector3(0f, 0f, 0f));
+		foreach (GameObject gem in gems) {
+			if (gem.transform.position.y < lowerBoundPos.y) {
+				gemstoRemove.Add(gem);
 			}
 		}
 	}
@@ -132,6 +164,12 @@ public class UpdateSimulator {
 			GameObject.Destroy(projectile.gameObject);
 		}
 		projectilesToRemove.Clear();
+
+		foreach (GameObject gem in gemstoRemove) {
+			gems.Remove(gem);
+			GameObject.Destroy(gem);
+		}
+		gemstoRemove.Clear();
 	}
 
 }

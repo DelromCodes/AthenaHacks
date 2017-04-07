@@ -8,6 +8,18 @@ public class ResourceManager: MonoBehaviour {
 	public GameObject HUDCanvasGO;
 	public GameObject GameboardGO;
 
+	//Dialog related
+	public static string DRAGON_DIALOG = "DragonDialog";
+
+	//Projectiles
+	public static string FIRE_PROJECTILE = "FireProjectile";
+
+	//Gems
+	public static string SINGLE_CUT = "OldSingleCut";
+	public static string PEAR_CUT = "PearCut";
+	public static string ROSE_CUT = "RoseCut";
+	public static string ROUND_CUT = "RoundCut";
+
 	protected Dictionary<string, GameObject> cachedResources = new Dictionary<string, GameObject>();
 
 	public GameObject LoadDialog(string prefabName) {

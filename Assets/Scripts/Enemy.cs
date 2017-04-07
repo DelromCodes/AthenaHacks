@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,5 +27,15 @@ public class Enemy : MonoBehaviour {
 		}
 
 		transform.position = newWorldPos;
+	}
+
+	public void OnHit() {
+		AnimateHit();
+	}
+
+	protected void AnimateHit() {
+		DOTween.Kill("EnemyAnimateHit");
+		transform.localScale = Vector3.one;
+		transform.DOPunchScale(new Vector3(1.2f, 1.2f, 1.2f), 0.5f).SetId("EnemyAnimateHit");
 	}
 }
