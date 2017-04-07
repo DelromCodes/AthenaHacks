@@ -5,7 +5,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
+	public enum MoveDirection {
+		LEFT,
+		RIGHT,
+		NONE
+	}
+
 	public Animator Animator;
+	public Collider Collider;
 
 	//Animator Triggers
 	protected int scream;
@@ -17,8 +24,11 @@ public class Player : MonoBehaviour {
 	protected int run;
 	protected int idle;
 
-	//State related
+	//internal related
 	protected bool moving = false;
+	protected float moveIncrement = 0.15f;
+	protected MoveDirection moveDirection = MoveDirection.NONE;
+	protected Vector3 nextPosition;
 
 	//Initialization
 	public void Awake() {
@@ -40,6 +50,32 @@ public class Player : MonoBehaviour {
 	}
 
 	//Public methods
+	public void SetMovementDirection(MoveDirection moveDirection_) {
+		moveDirection = moveDirection_;
+
+	}
+
+	public void OnMove() {
+		switch(moveDirection) {
+		case MoveDirection.LEFT:
+			nextPosition = GetMoveLeftPosition;
+			Move();
+			break;
+		case MoveDirection.RIGHT:
+			nextPosition = GetMoveRightPosition;
+			Move ();
+			break;
+		case MoveDirection.NONE:
+			//Do nothing
+			StopMove();
+			break;
+		default:
+			//Do nothing
+			StopMove();
+			break;
+		}
+	}
+
 	public void StopMove() {
 		if (moving) {
 			Debug.Log ("Stop moving");
@@ -47,14 +83,14 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	public void Move(Vector3 position) {
+	protected void Move() {
 		if (!moving) {
 			Debug.Log ("Move");
 			AnimateRun();
 		}
-		transform.position = position;
+		transform.position = nextPosition;
 	}
-
+		
 	public void Attack() {
 		AnimateBasicAttack();
 	}
@@ -63,7 +99,38 @@ public class Player : MonoBehaviour {
 		AnimateGetHit();
 	}
 
-	//Attack related
+	//Movement properties
+	protected Vector3 GetMoveLeftPosition {
+		get {
+			//Update the WorldPosition to the left
+			Vector3 newWorldPos = transform.position;
+			newWorldPos.x -= moveIncrement;
+
+			//Clamp the newWorldPos to the viewport's edge
+			Vector3 viewportPos = Camera.main.WorldToViewportPoint(newWorldPos);
+			viewportPos.x = Mathf.Max(viewportPos.x, 0.1f); //Viewport is from 0.0f to 1.0f
+			Vector3 clampedWorldPos = Camera.main.ViewportToWorldPoint(viewportPos);
+
+			return clampedWorldPos;
+		}
+	}
+
+	protected Vector3 GetMoveRightPosition {
+		get {
+			//Update the WorldPosition to the left
+			Vector3 newWorldPos = transform.position;
+			newWorldPos.x += moveIncrement;
+
+			//Clamp the newWorldPos to the viewport's edge
+			Vector3 viewportPos = Camera.main.WorldToViewportPoint(newWorldPos);
+			viewportPos.x = Mathf.Min(viewportPos.x, 0.9f); //Viewport is from 0.0 to 1.0f
+			Vector3 clampedWorldPos = Camera.main.ViewportToWorldPoint(viewportPos);
+
+			return clampedWorldPos;
+		}
+	}
+
+	//Animation: Attack related
 	protected void AnimateScream() {
 		Animator.SetTrigger(scream);
 	}
@@ -76,7 +143,7 @@ public class Player : MonoBehaviour {
 		Animator.SetTrigger(strongAttack);
 	}
 
-	//Movement related
+	//Animation: Movement related
 	protected void AnimateIdle() {
 		moving = false;
 		Animator.SetTrigger(idle);

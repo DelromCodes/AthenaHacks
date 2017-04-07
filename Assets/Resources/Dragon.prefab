@@ -577,7 +577,7 @@ GameObject:
   - component: {fileID: 4085958372670472}
   - component: {fileID: 95896200019734856}
   - component: {fileID: 114921493022365074}
-  - component: {fileID: 114717140826799586}
+  - component: {fileID: 65762422252374104}
   m_Layer: 0
   m_Name: Dragon
   m_TagString: Untagged
@@ -752,16 +752,16 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1845474209948386}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 4013786798232722}
   - {fileID: 4620020142035446}
   - {fileID: 4337627931391524}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &4092872321468834
 Transform:
   m_ObjectHideFlags: 1
@@ -1261,6 +1261,18 @@ Transform:
   m_Father: {fileID: 4024842297437166}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &65762422252374104
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1845474209948386}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 3, z: 6}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!95 &95896200019734856
 Animator:
   serializedVersion: 3
@@ -1278,17 +1290,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114717140826799586
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1845474209948386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf213f0648ee74cea8c6915e14bcfa0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114921493022365074
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1301,6 +1302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Animator: {fileID: 95896200019734856}
+  Collider: {fileID: 65762422252374104}
 --- !u!137 &137819503500698788
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
