@@ -1,2 +1,2 @@
 # AthenaHacks
-Starter project for AthenaHacks workshop
+Starter project for AthenaHacks 2017 workshop
